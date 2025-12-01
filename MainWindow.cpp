@@ -57,9 +57,6 @@ void MainWindow::setupToolbar() {
     QAction* loadFileAction = menuFile->addAction("&Cargar binario...");
     connect(loadFileAction, &QAction::triggered, this, &MainWindow::onLoadFileClicked);
 
-    QMenu* menuView = menuBar()->addMenu("&Ver");
-    menuView->addAction("&Escalar ventana...");
-
     QMenu* menuSettings = menuBar()->addMenu("&Configuración");
     QAction* periodAction = menuSettings->addAction("&Periodo de reloj...");
     connect(periodAction, &QAction::triggered, this, &MainWindow::onPeriodClicked);
@@ -79,7 +76,12 @@ void MainWindow::setupToolbar() {
     connect(memAction, &QAction::triggered, this, &MainWindow::onShowMemory);
 
     QMenu* menuHelp = menuBar()->addMenu("&Ayuda");
-    menuHelp->addAction("&Información...");
+    QAction* infoAction = menuHelp->addAction("&Información...");
+    connect(infoAction, &QAction::triggered, this, &MainWindow::onInfoClicked);
+}
+
+void MainWindow::onInfoClicked(){
+    QMessageBox::information(this, "Info", "Emulador MASIC, hecho por Diego Cerezo Rojas. https://github.com/tetrix450/");
 }
 
 void MainWindow::onShowMemory() {
@@ -192,42 +194,45 @@ void MainWindow::autoLoad(std::string filename, bool debug){
 }
 
 void MainWindow::onLoadFileClicked() {
-    QString fileName = QFileDialog::getOpenFileName(
-        this,
-        "Selecciona un programa",
-        "./",
-        "*.mmc"
-        );
+    QFileDialog dlg(this);
+    dlg.setFileMode(QFileDialog::ExistingFile);
+    dlg.setNameFilter("Masic Machine Code (*.mmc)");
+    dlg.setDirectory("./");
+    dlg.setOption(QFileDialog::DontUseNativeDialog);
 
-    if (!fileName.isEmpty()) {
-        QFile file(fileName);
-        if (!file.open(QIODevice::ReadOnly)) {
-            errorMessage("Error al abrir el archivo: " + fileName.toStdString());
-            return;
+    if(dlg.exec()){
+        QString fileName = dlg.selectedFiles().first();
+
+        if (!fileName.isEmpty()) {
+            QFile file(fileName);
+            if (!file.open(QIODevice::ReadOnly)) {
+                errorMessage("Error al abrir el archivo: " + fileName.toStdString());
+                return;
+            }
+
+            QByteArray data = file.readAll();
+            int len = qMin(data.size(), 65536);
+            memcpy(mem, data.constData(), len);
+
+            loaded = true;
+            cpu->reset();
+
+            if(!stepByStepCheckboxAction->isChecked()){
+                cpu->start();
+            }
+
+            // Clear VRAM
+            for(int i = 0; i < 8192; i++){
+                io[i] = 0x20;
+            }
+
+            sBar->showMessage("Programa cargado correctamente.", 5000);
+            loadedProgramFilename = fileName.toStdString();
+
+            memWin->highlightByte(cpu->getPC());
+        } else {
+            warningMessage("No se ha cargado ningún programa...");
         }
-
-        QByteArray data = file.readAll();
-        int len = qMin(data.size(), 65536);
-        memcpy(mem, data.constData(), len);
-
-        loaded = true;
-        cpu->reset();
-
-        if(!stepByStepCheckboxAction->isChecked()){
-            cpu->start();
-        }
-
-        // Clear VRAM
-        for(int i = 0; i < 8192; i++){
-            io[i] = 0x20;
-        }
-
-        sBar->showMessage("Programa cargado correctamente.", 5000);
-        loadedProgramFilename = fileName.toStdString();
-
-        memWin->highlightByte(cpu->getPC());
-    } else {
-        warningMessage("No se ha cargado ningún programa...");
     }
 }
 

@@ -28,6 +28,7 @@ private:
     void autoResize();
     void onShowMemory();
     void onReset();
+    void onInfoClicked();
 
     bool loaded = false;
     CPUThread* cpu;
