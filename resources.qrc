@@ -1,0 +1,16 @@
+<RCC>
+  <qresource>
+    <file>tilemap.png</file>
+	<file>icons/jump.png</file>
+	<file>icons/masic.png</file>
+	<file>icons/next.png</file>
+	<file>icons/play.png</file>
+	<file>icons/pause.png</file>
+	<file>icons/reset.png</file>
+	<file>firmware/firmware_0.bin</file>
+	<file>firmware/firmware_1.bin</file>
+	<file>firmware/firmware_2.bin</file>
+	<file>firmware/firmware_3.bin</file>
+	<file>firmware/firmware_4.bin</file>
+  </qresource>
+</RCC>
