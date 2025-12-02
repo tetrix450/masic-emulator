@@ -42,8 +42,8 @@ MainWindow::MainWindow(CPUThread* cpu):cpu(cpu) {
     video->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     this->setCentralWidget(video);
 
-    memWin = new MemoryWindow(this);
-    memWin->highlightByte(cpu->getPC());
+    memWin = new MemoryWindow(this, cpu);
+    memWin->updateView();
 }
 
 void MainWindow::autoResize(){
@@ -70,9 +70,8 @@ void MainWindow::setupToolbar() {
     connect(stepByStepCheckboxAction, &QAction::toggled, this, &MainWindow::onStepByStepToggled);
 
     menuDebugger->addAction(stepByStepCheckboxAction);
-    menuDebugger->addAction("Mostrar &registros");
 
-    QAction* memAction = menuDebugger->addAction("Mostrar &memoria");
+    QAction* memAction = menuDebugger->addAction("Mostrar &memoria y registros");
     connect(memAction, &QAction::triggered, this, &MainWindow::onShowMemory);
 
     QMenu* menuHelp = menuBar()->addMenu("&Ayuda");
@@ -91,7 +90,6 @@ void MainWindow::onShowMemory() {
     memWin->raise();
     memWin->activateWindow();
 }
-
 
 void MainWindow::onPeriodClicked(){
     PeriodDialog dlg(this, cpu->getPeriodNs());
@@ -152,7 +150,7 @@ void MainWindow::onInstructionStepClicked(){
     cpu->pause();
     pauseAction->setIcon(QIcon(":/icons/play.png"));
     cpu->stepInstruction();
-    memWin->highlightByte(cpu->getPC());
+    memWin->updateView();
     sBar->showMessage("El reloj avanzó 1 instrucción...", 1000);
 }
 
@@ -160,13 +158,14 @@ void MainWindow::onReset(){
     if(loaded){
         autoLoad(loadedProgramFilename, true);
         sBar->showMessage("CPU reseteada y programa recargado. CPU en pausa.");
-        memWin->highlightByte(cpu->getPC());
+        memWin->updateView();
     }else{
         warningMessage("No se ha cargado ningún programa...");
     }
 }
 
 void MainWindow::autoLoad(std::string filename, bool debug){
+    loadedProgramFilename = filename;
     QFile file(QString::fromStdString(filename));
     if (!file.open(QIODevice::ReadOnly)) {
         errorMessage("Error al abrir el archivo: " + filename);
@@ -229,7 +228,7 @@ void MainWindow::onLoadFileClicked() {
             sBar->showMessage("Programa cargado correctamente.", 5000);
             loadedProgramFilename = fileName.toStdString();
 
-            memWin->highlightByte(cpu->getPC());
+            memWin->updateView();
         } else {
             warningMessage("No se ha cargado ningún programa...");
         }
@@ -240,7 +239,7 @@ void MainWindow::onClockStepClicked(){
     cpu->pause();
     pauseAction->setIcon(QIcon(":/icons/play.png"));
     cpu->step();
-    memWin->highlightByte(cpu->getPC());
+    memWin->updateView();
     sBar->showMessage("El reloj avanzó 1 ciclo...", 1000);
 }
 

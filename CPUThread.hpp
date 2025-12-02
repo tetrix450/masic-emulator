@@ -44,7 +44,20 @@ public:
     void step();
     void stepInstruction();
     void pause();
+
     uint16_t getPC(){return ((PCH<<8)|PCL);};
+    uint16_t getSP(){return ((SPH<<8)|SPL);};
+    uint16_t getD(){return ((DH<<8)|DL);};
+    uint8_t getAC(){return AC;};
+    uint8_t getS(){return S;};
+    uint8_t getC(){return C;};
+    uint8_t getV(){return V;};
+    uint8_t getZ(){return Z;};
+    uint8_t getH(){return H;};
+    uint8_t getAUX(){return AUX;};
+    uint8_t getRCF(){return RCF;};
+    uint8_t getRI(){return RI;};
+
     void setPeriodNs(double periodNs);
     double getPeriodNs();
     bool isRunning(){return running;};

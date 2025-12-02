@@ -1,20 +1,24 @@
 #include "MemoryWindow.hpp"
 #include "HexViewWidget.hpp"
 #include <QVBoxLayout>
+#include <QTextEdit>
 
-MemoryWindow::MemoryWindow(QWidget* parent): QDialog(parent){
-    setWindowTitle("Memoria (HEX)");
+MemoryWindow::MemoryWindow(QWidget* parent, CPUThread* cpu): QDialog(parent){
+    setWindowTitle("Memoria y registros (HEX)");
 
-    hexView = new HexViewWidget(this);
+    hexView = new HexViewWidget(this, cpu);
 
     QVBoxLayout* layout = new QVBoxLayout();
-    layout->addWidget(hexView);
+    layout->addWidget(hexView, 1);
+    registers = new RegistersWidget(this, cpu);
+    layout->addWidget(registers, 1);
 
     setLayout(layout);
 
-    resize(hexView->getWidth() + 50, 400);
+    resize(hexView->getWidth() + 50, 600);
 }
 
-void MemoryWindow::highlightByte(size_t address){
-    hexView->highlightByte(address);
+void MemoryWindow::updateView(){
+    hexView->highlightPC();
+    registers->updateRegisters();
 }

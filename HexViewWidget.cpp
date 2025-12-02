@@ -9,11 +9,12 @@
 
 extern uint8_t mem[65536];
 
-HexViewWidget::HexViewWidget(QWidget* parent)
-    : QAbstractScrollArea(parent),
+HexViewWidget::HexViewWidget(QWidget* parent, CPUThread* cpu):
+    QAbstractScrollArea(parent),
     totalBytes(65536),
     firstRow(0),
-    editAddress(-1)
+    editAddress(-1),
+    cpu(cpu)
 {
     bytesPerRow = 16;
     QFont mono = QFontDatabase::systemFont(QFontDatabase::FixedFont);
@@ -40,8 +41,8 @@ void HexViewWidget::updateScrollBar(){
     verticalScrollBar()->setPageStep(viewport()->height() / lineHeight);
 }
 
-void HexViewWidget::highlightByte(std::size_t index){
-    highlightedByte = index;
+void HexViewWidget::highlightPC(){
+    highlightedByte = cpu->getPC();
     viewport()->update();
 }
 

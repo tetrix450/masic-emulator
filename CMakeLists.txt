@@ -38,6 +38,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_HEADERS}
         ${PROJECT_SOURCES}
         resources.qrc
+        RegistersWidget.hpp RegistersWidget.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET qtmasic APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

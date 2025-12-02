@@ -2,16 +2,15 @@
 #define HEXVIEWWIDGET_H
 
 #include <QAbstractScrollArea>
-#include <cstddef>
+#include "CPUThread.hpp"
 
-class HexViewWidget : public QAbstractScrollArea
-{
+class HexViewWidget : public QAbstractScrollArea{
     Q_OBJECT
 
 public:
-    explicit HexViewWidget(QWidget* parent = nullptr);
+    HexViewWidget(QWidget* parent, CPUThread* cpu);
 
-    void highlightByte(std::size_t index);
+    void highlightPC();
     int getWidth();
 
 protected:
@@ -20,6 +19,7 @@ protected:
     void keyPressEvent(QKeyEvent* e) override;
 
 private:
+    CPUThread* cpu;
     int bytesPerRow;
     int lineHeight;
     int byteWidth;
@@ -30,7 +30,6 @@ private:
 
     int highlightedByte = -1;
 
-    // Edición
     int editAddress;
     QString editBuffer;
 
