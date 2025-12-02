@@ -76,7 +76,7 @@ void HexViewWidget::paintEvent(QPaintEvent*){
             // resaltado o edición
             if (addr == editAddress){
                 QRect r(x, y, boxWidth, lineHeight);
-                p.fillRect(r, QColor(0, 120, 255, 100));
+                p.fillRect(r, QColor(0, 192, 255, 192));
 
                 QString text;
                 if (editBuffer.isEmpty())
