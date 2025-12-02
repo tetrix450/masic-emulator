@@ -19,8 +19,9 @@ compilarlo y ejecutar pulsamos Ctrl+R.
 Una vez comprobamos que todo funciona correctamente, cerramos el programa, y veremos que se habrá generado una carpeta build en el proyecto.
 De ahí extramos el .exe que se ha generado, pero no funciona por sí solo, ya que faltan las librerías. Lo movemos a alguna carpeta vacía y
 abrimos Qt 6.x for MinGW (64-bit) desde el menú inicio, que nos prepara un CMD con todas las variables de entorno necesarias. Desde aquí
-navegamos hasta el directorio donde esté la carpeta vacía que hemos creado y ejecutamos "windeployqt qtmasic.exe". ¡Listo! Ya tenemos el
-programa listo para ser usado.
+navegamos hasta el directorio donde esté la carpeta vacía que hemos creado y ejecutamos:
+`windeployqt qtmasic.exe`
+¡Listo! Ya tenemos el programa preparado para ser ejecutado.
 
 ### En el caso de Linux
 El binario que se genera en la carpeta build por sí solo funciona perfectamente. Aquí es más sencillo :)
