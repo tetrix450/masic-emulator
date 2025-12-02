@@ -1,5 +1,5 @@
-C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/EWIEGA46WW/moc_PeriodDialog.cpp: C:/Users/tetrix/Desktop/qtmasic-main/PeriodDialog.hpp \
-  C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/moc_predefs.h \
+C:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/EWIEGA46WW/moc_PeriodDialog.cpp: C:/Users/tetrix/Desktop/qtmasic/PeriodDialog.hpp \
+  C:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/moc_predefs.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/q17memory.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/q20functional.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/q20iterator.h \

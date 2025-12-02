@@ -1,5 +1,5 @@
-C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/EWIEGA46WW/moc_RegistersWidget.cpp: C:/Users/tetrix/Desktop/qtmasic-main/RegistersWidget.hpp \
-  C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/moc_predefs.h \
+C:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/EWIEGA46WW/moc_RegistersWidget.cpp: C:/Users/tetrix/Desktop/qtmasic/RegistersWidget.hpp \
+  C:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/moc_predefs.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/QThread \
   C:/Qt/6.10.1/mingw_64/include/QtCore/q17memory.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/q20functional.h \
@@ -410,4 +410,4 @@ C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/time.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/vadefs.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h \
-  C:/Users/tetrix/Desktop/qtmasic-main/CPUThread.hpp
+  C:/Users/tetrix/Desktop/qtmasic/CPUThread.hpp

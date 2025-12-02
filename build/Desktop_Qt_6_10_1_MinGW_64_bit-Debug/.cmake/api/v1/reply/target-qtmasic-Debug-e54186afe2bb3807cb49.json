@@ -75,13 +75,13 @@
 			{
 				"command" : 4,
 				"file" : 1,
-				"line" : 82,
+				"line" : 83,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 60,
+				"line" : 61,
 				"parent" : 0
 			},
 			{
@@ -344,7 +344,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/include"
+					"path" : "C:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/include"
 				},
 				{
 					"backtrace" : 13,
@@ -402,18 +402,19 @@
 				11,
 				12,
 				13,
-				16
+				16,
+				18
 			]
 		}
 	],
 	"dependencies" : 
 	[
 		{
-			"id" : "qtmasic_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
-		},
-		{
 			"backtrace" : 0,
 			"id" : "qtmasic_autogen::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "qtmasic_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "qtmasic::@6890427a1f51a3e7e1df",
@@ -541,7 +542,8 @@
 				11,
 				12,
 				13,
-				16
+				16,
+				18
 			]
 		},
 		{
@@ -553,7 +555,8 @@
 				3,
 				4,
 				5,
-				6
+				6,
+				15
 			]
 		},
 		{
@@ -567,15 +570,15 @@
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				15
+				17
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				17,
-				18
+				19,
+				20
 			]
 		}
 	],
@@ -664,6 +667,17 @@
 			"backtrace" : 4,
 			"path" : "resources.qrc",
 			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 4,
+			"path" : "RegistersWidget.hpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "RegistersWidget.cpp",
+			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 0,

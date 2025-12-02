@@ -1,5 +1,5 @@
-C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/EWIEGA46WW/moc_VideoWidget.cpp: C:/Users/tetrix/Desktop/qtmasic-main/VideoWidget.hpp \
-  C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/moc_predefs.h \
+C:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/EWIEGA46WW/moc_VideoWidget.cpp: C:/Users/tetrix/Desktop/qtmasic/VideoWidget.hpp \
+  C:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/qtmasic_autogen/moc_predefs.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/QScopedPointer \
   C:/Qt/6.10.1/mingw_64/include/QtCore/QTimer \
   C:/Qt/6.10.1/mingw_64/include/QtCore/q17memory.h \

@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug"
+			"value" : "c:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -479,7 +479,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -563,7 +563,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/tetrix/Desktop/qtmasic-main"
+			"value" : "C:/Users/tetrix/Desktop/qtmasic"
 		},
 		{
 			"name" : "CMAKE_INSTALL_BINDIR",
@@ -1063,7 +1063,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/.qtc/package-manager/auto-setup.cmake"
+			"value" : "C:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/.qtc/package-manager/auto-setup.cmake"
 		},
 		{
 			"name" : "CMAKE_PROJECT_NAME",
@@ -6859,7 +6859,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug"
+			"value" : "C:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug"
 		},
 		{
 			"name" : "qtmasic_IS_TOP_LEVEL",
@@ -6883,7 +6883,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/tetrix/Desktop/qtmasic-main"
+			"value" : "C:/Users/tetrix/Desktop/qtmasic"
 		}
 	],
 	"kind" : "cache",

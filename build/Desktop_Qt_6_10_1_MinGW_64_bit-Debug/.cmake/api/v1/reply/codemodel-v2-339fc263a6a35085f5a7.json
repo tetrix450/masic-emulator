@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-c0c1a57fa3dd0606fa7c.json",
+					"jsonFile" : "directory-.-Debug-a8b7082a663a955178e4.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "qtmasic::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-qtmasic-Debug-a7366cf042527c086d3f.json",
+					"jsonFile" : "target-qtmasic-Debug-e54186afe2bb3807cb49.json",
 					"name" : "qtmasic",
 					"projectIndex" : 0
 				},
@@ -68,8 +68,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/tetrix/Desktop/qtmasic-main/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug",
-		"source" : "C:/Users/tetrix/Desktop/qtmasic-main"
+		"build" : "C:/Users/tetrix/Desktop/qtmasic/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug",
+		"source" : "C:/Users/tetrix/Desktop/qtmasic"
 	},
 	"version" : 
 	{
