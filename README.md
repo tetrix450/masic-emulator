@@ -27,5 +27,7 @@ navegamos hasta el directorio donde esté la carpeta vacía que hemos creado y e
 El binario que se genera en la carpeta build por sí solo funciona perfectamente. Aquí es más sencillo :)
 
 ## Mejoras proyectadas a futuro
+- Carga de código fuente en ensamblador, con salida de errores
+- Posibilidad de provocar interrupciones durante la ejecución del programa
 - Añadir posibilidad de cargar el firmware de la CPU
-- Agregar una vista gráfica del diagrama de la arquitectura para ver el camino que siguen los datos en tiempo real
+- Agregar una vista gráfica del diagrama de la arquitectura para ver las señales de control y el camino que siguen los datos en tiempo real
