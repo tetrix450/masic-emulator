@@ -13,7 +13,7 @@ HexViewWidget::HexViewWidget(QWidget* parent, CPUThread* cpu):
     QAbstractScrollArea(parent),
     totalBytes(65536),
     firstRow(0),
-    editAddress(-1),
+    editBuffer(),
     cpu(cpu)
 {
     bytesPerRow = 16;
@@ -46,15 +46,32 @@ void HexViewWidget::highlightPC(){
     viewport()->update();
 }
 
+int HexViewWidget::posToAddress(const QPoint& pos) const {
+    int row = pos.y() / lineHeight + firstRow;
+    if (row < 0 || row >= totalRows) return -1;
+
+    int x = pos.x();
+    if (x < 60) return -1;
+
+    int col = (x - 60) / byteWidth;
+    if (col < 0 || col >= bytesPerRow) return -1;
+
+    int addr = row * bytesPerRow + col;
+    if (addr >= totalBytes) return -1;
+
+    return addr;
+}
+
 void HexViewWidget::paintEvent(QPaintEvent*){
     QPainter p(viewport());
-
     const int vpHeight = viewport()->height();
     const int visibleRows = vpHeight / lineHeight + 1;
-
     QFontMetrics fm(viewport()->font());
 
     int y = 0;
+
+    int selStart = qMin(selectionStart, selectionEnd);
+    int selEnd   = qMax(selectionStart, selectionEnd);
 
     for (int row = firstRow; row < firstRow + visibleRows; ++row){
         int baseAddr = row * bytesPerRow;
@@ -68,119 +85,84 @@ void HexViewWidget::paintEvent(QPaintEvent*){
         for (int col = 0; col < bytesPerRow; ++col){
             int addr = baseAddr + col;
             if (addr >= totalBytes) break;
-
             int x = 60 + col * byteWidth;
-
             int boxWidth = fm.horizontalAdvance("FF");
 
-            // resaltado o edición
-            if (addr == editAddress){
-                QRect r(x, y, boxWidth, lineHeight);
-                p.fillRect(r, QColor(0, 192, 255, 192));
-
-                QString text;
-                if (editBuffer.isEmpty())
-                    text = QString("%1 ").arg(mem[addr], 2, 16, QChar('0'));
-                else
-                    text = editBuffer + QString(" ").repeated(2 - editBuffer.size());
-
-                p.drawText(x, y + fm.ascent(), text);
-            }else if (addr == highlightedByte){
-                QRect r(x, y, boxWidth, lineHeight);
-                p.fillRect(r, QColor(128, 255, 128));
-                p.drawText(x, y + fm.ascent(), QString("%1 ").arg(mem[addr], 2, 16, QChar('0')));
-            }else{
-                p.drawText(x, y + fm.ascent(),
-                           QString("%1 ").arg(mem[addr], 2, 16, QChar('0')));
+            // Resaltado de edición múltiple
+            if (addr >= selStart && addr <= selEnd){
+                QColor color = (addr == selStart + editIndexInSelection) ? QColor(0, 192, 255, 192)
+                                                                         : QColor(192, 192, 255, 128);
+                p.fillRect(QRect(x, y, boxWidth, lineHeight), color);
+            } else if (addr == highlightedByte){
+                p.fillRect(QRect(x, y, boxWidth, lineHeight), QColor(128, 255, 128));
             }
+
+            p.drawText(x, y + fm.ascent(), QString("%1 ").arg(mem[addr], 2, 16, QChar('0')));
         }
 
         y += lineHeight;
     }
 }
 
-void HexViewWidget::mousePressEvent(QMouseEvent* e)
-{
-    QFontMetrics fm(viewport()->font());
+void HexViewWidget::mousePressEvent(QMouseEvent* e){
+    int addr = posToAddress(e->pos());
+    if (addr < 0) return;
 
-    int y = e->pos().y();
-    int row = y / lineHeight + firstRow;
-    if (row < 0 || row >= totalRows)
-        return;
+    if (e->button() == Qt::LeftButton){
+        selectionStart = addr;
+        selectionEnd   = addr;
+        editIndexInSelection = 0;
+        editBuffer.clear();
+        selecting = true;
+        viewport()->setFocus();
+        viewport()->update();
+    }
+}
 
-    int x = e->pos().x();
-
-    // zona de bytes empieza en x >= 60
-    if (x < 60)
-        return;
-
-    int col = (x - 60) / byteWidth;
-    if (col < 0 || col >= bytesPerRow)
-        return;
-
-    int addr = row * bytesPerRow + col;
-    if (addr >= totalBytes)
-        return;
-
-    editAddress = addr;
-    editBuffer.clear();
-
-    viewport()->setFocus();
+void HexViewWidget::mouseMoveEvent(QMouseEvent* e){
+    if (!selecting) return;
+    int addr = posToAddress(e->pos());
+    if (addr < 0) return;
+    selectionEnd = addr;
     viewport()->update();
 }
 
-void HexViewWidget::keyPressEvent(QKeyEvent* e)
-{
-    if (editAddress < 0)
+void HexViewWidget::mouseReleaseEvent(QMouseEvent*){
+    selecting = false;
+    viewport()->update();
+}
+
+void HexViewWidget::keyPressEvent(QKeyEvent* e){
+    if (selectionStart < 0 || selectionEnd < 0)
         return;
 
-    int key = e->key();
-
-    // cancelar con ESC
-    if (key == Qt::Key_Escape)
-    {
-        editAddress = -1;
-        editBuffer.clear();
-        viewport()->update();
-        return;
-    }
+    int selStart = qMin(selectionStart, selectionEnd);
+    int selEnd   = qMax(selectionStart, selectionEnd);
 
     QString text = e->text().toUpper();
-    if (text.isEmpty())
-        return;
+    if (text.isEmpty()) return;
 
     QChar c = text.at(0);
-
-    bool hex = (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F');
-    if (!hex)
-        return;
+    if (!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'))) return;
 
     editBuffer.append(c);
 
     if (editBuffer.size() == 2){
-        bool ok = false;
+        bool ok;
         uint8_t value = editBuffer.toUInt(&ok, 16);
-        if (ok)
-            mem[editAddress] = value;
+        if (ok){
+            int addr = selStart + editIndexInSelection;
+            if (addr <= selEnd)
+                mem[addr] = value;
 
-        if (editBuffer.size() == 2){
-            bool ok = false;
-            uint8_t value = editBuffer.toUInt(&ok, 16);
-            if (ok)
-                mem[editAddress] = value;
-
-            // Avanzar automáticamente al siguiente byte
-            int next = editAddress + 1;
-            if (next < totalBytes){
-                editAddress = next;
-                editBuffer.clear();
-            }else{
-                // Final de memoria: cancelar edición
-                editAddress = -1;
-                editBuffer.clear();
+            // Avanzar al siguiente byte dentro de la selección
+            editIndexInSelection++;
+            if (selStart + editIndexInSelection > selEnd){
+                // Fin de la selección
+                selectionStart = selectionEnd = -1;
+                editIndexInSelection = 0;
             }
         }
-
         editBuffer.clear();
     }
 
