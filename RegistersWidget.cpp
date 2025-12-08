@@ -32,9 +32,9 @@ void RegistersWidget::updateRegisters(){
     model->item(5,1)->setText(QString("%1").arg(cpu->getRI(), 2, 16, QLatin1Char('0')).toUpper());
     model->item(6,1)->setText(QString("%1").arg(cpu->getRCF(), 2, 16, QLatin1Char('0')).toUpper());
     model->item(7,1)->setText(QString("%1").arg(cpu->getS(), 2, 16, QLatin1Char('0')).toUpper());
-    model->item(7,1)->setText(QString("%1").arg(cpu->getC(), 2, 16, QLatin1Char('0')).toUpper());
-    model->item(7,1)->setText(QString("%1").arg(cpu->getV(), 2, 16, QLatin1Char('0')).toUpper());
-    model->item(7,1)->setText(QString("%1").arg(cpu->getZ(), 2, 16, QLatin1Char('0')).toUpper());
-    model->item(7,1)->setText(QString("%1").arg(cpu->getH(), 2, 16, QLatin1Char('0')).toUpper());
+    model->item(8,1)->setText(QString("%1").arg(cpu->getC(), 2, 16, QLatin1Char('0')).toUpper());
+    model->item(9,1)->setText(QString("%1").arg(cpu->getV(), 2, 16, QLatin1Char('0')).toUpper());
+    model->item(10,1)->setText(QString("%1").arg(cpu->getZ(), 2, 16, QLatin1Char('0')).toUpper());
+    model->item(11,1)->setText(QString("%1").arg(cpu->getH(), 2, 16, QLatin1Char('0')).toUpper());
 
 }
