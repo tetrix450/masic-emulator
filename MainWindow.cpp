@@ -182,6 +182,11 @@ void MainWindow::autoLoad(std::string filename, bool debug){
     // Activate debug?
     if(debug){
         onStepByStepToggled(true);
+        stepByStepCheckboxAction->setChecked(true);
+        pauseAction->setIcon(QIcon(":/icons/play.png"));
+        memWin->show();
+        memWin->raise();
+        memWin->activateWindow();
     }else{
         cpu->start();
     }
