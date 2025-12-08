@@ -25,7 +25,7 @@ MemoryWindow::MemoryWindow(QWidget* parent, CPUThread* cpu): QDialog(parent){
     });
     timer->start(20);
 
-    resize(hexView->getWidth() + 50, 600);
+    resize(hexView->getWidth() + 50, QApplication::primaryScreen()->geometry().height()/1.25);
 }
 
 void MemoryWindow::updateView(){
