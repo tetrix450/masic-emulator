@@ -6,13 +6,17 @@
 #include <QWidget>
 #include <QHeaderView>
 #include <QVBoxLayout>
+#include <QSignalBlocker>
 #include "CPUThread.hpp"
 
 class RegistersWidget : public QWidget {
     Q_OBJECT
 public:
-    RegistersWidget(QWidget *parent, CPUThread* cpu);
+    explicit RegistersWidget(QWidget *parent, CPUThread* cpu);
     void updateRegisters();
+
+private slots:
+    void onItemChanged(QStandardItem *item);
 
 private:
     QTableView *view;

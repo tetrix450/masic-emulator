@@ -45,6 +45,7 @@ public:
     void stepInstruction();
     void pause();
 
+    // Getters
     uint16_t getPC(){return ((PCH<<8)|PCL);};
     uint16_t getSP(){return ((SPH<<8)|SPL);};
     uint16_t getD(){return ((DH<<8)|DL);};
@@ -57,6 +58,20 @@ public:
     uint8_t getAUX(){return AUX;};
     uint8_t getRCF(){return RCF;};
     uint8_t getRI(){return RI;};
+
+    // Setters
+    void setPC(uint16_t value){PCL = value&0xFF; PCH = (value>>8)&0xFF;};
+    void setSP(uint16_t value){SPL = value&0xFF; SPH = (value>>8)&0xFF;};
+    void setD(uint16_t value){DL = value&0xFF; DH = (value>>8)&0xFF;};
+    void setAC(uint8_t value){AC = value;};
+    void setS(uint8_t value){S = value;};
+    void setC(uint8_t value){C = value;};
+    void setV(uint8_t value){V = value;};
+    void setZ(uint8_t value){Z = value;};
+    void setH(uint8_t value){H = value;};
+    void setAUX(uint8_t value){AUX = value;};
+    void setRCF(uint8_t value){RCF = value;};
+    void setRI(uint8_t value){RI = value;};
 
     void setPeriodNs(double periodNs);
     double getPeriodNs();
