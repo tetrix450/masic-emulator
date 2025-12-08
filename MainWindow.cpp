@@ -112,8 +112,6 @@ void MainWindow::onInfoClicked(){
 }
 
 void MainWindow::onShowMemory() {
-    cpu->pause();
-    pauseAction->setIcon(QIcon(":/icons/play.png"));
     memWin->show();
     memWin->raise();
     memWin->activateWindow();
