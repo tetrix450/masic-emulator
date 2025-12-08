@@ -20,6 +20,7 @@ set(PROJECT_HEADERS
     PeriodDialog.hpp
     MainWindow.hpp
     VideoWidget.hpp
+    ScaleDialog.hpp
 )
 
 set(PROJECT_SOURCES
@@ -30,6 +31,7 @@ set(PROJECT_SOURCES
     MemoryWindow.cpp
     HexViewWidget.cpp
     PeriodDialog.cpp
+    ScaleDialog.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

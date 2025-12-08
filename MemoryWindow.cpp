@@ -1,8 +1,10 @@
 #include "MemoryWindow.hpp"
 #include "HexViewWidget.hpp"
+#include <QScreen>
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include <QTimer>
+#include <QApplication>
 
 MemoryWindow::MemoryWindow(QWidget* parent, CPUThread* cpu): QDialog(parent){
     setWindowTitle("Memoria y registros (HEX)");

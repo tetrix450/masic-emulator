@@ -5,6 +5,7 @@
 #include "qobject.h"
 #include "VideoWidget.hpp"
 #include "PeriodDialog.hpp"
+#include "ScaleDialog.hpp"
 #include <QMessageBox>
 #include <QRegularExpression>
 #include <QAction>
@@ -28,8 +29,8 @@ MainWindow::MainWindow(CPUThread* cpu):cpu(cpu) {
     this->setWindowTitle("EMUMASIC");
 
     // Escalar y centrar
-    float windowScale = 1.5;
-    resize(640*windowScale, 480*windowScale);
+    currentScale = 1.5;
+    resize(640*currentScale, 480*currentScale);
     center();
 
     // Colocar las toolbars
@@ -44,6 +45,19 @@ MainWindow::MainWindow(CPUThread* cpu):cpu(cpu) {
 
     memWin = new MemoryWindow(this, cpu);
     memWin->updateView();
+
+    // -------------- Apartar memWin a la derecha --------------
+    // Obtener las dimensiones de la pantalla
+    QScreen *screen = QApplication::primaryScreen();
+    QRect screenGeometry = screen->geometry();
+
+    // Calcular el centro
+    int x = (screenGeometry.width() - width()) / 2;
+    int y = (screenGeometry.height() - height()) / 2;
+
+    // Mover la ventana
+    memWin->move(x + this->width(), y);
+    // ---------------------------------------------------------
 }
 
 void MainWindow::autoResize(){
@@ -60,6 +74,8 @@ void MainWindow::setupToolbar() {
     QMenu* menuSettings = menuBar()->addMenu("&Configuración");
     QAction* periodAction = menuSettings->addAction("&Periodo de reloj...");
     connect(periodAction, &QAction::triggered, this, &MainWindow::onPeriodClicked);
+    QAction* scaleAction = menuSettings->addAction("&Escalar ventana...");
+    connect(scaleAction, &QAction::triggered, this, &MainWindow::onScaleClicked);
 
     QMenu* menuDebugger = menuBar()->addMenu("&Depurador");
 
@@ -77,6 +93,18 @@ void MainWindow::setupToolbar() {
     QMenu* menuHelp = menuBar()->addMenu("&Ayuda");
     QAction* infoAction = menuHelp->addAction("&Información...");
     connect(infoAction, &QAction::triggered, this, &MainWindow::onInfoClicked);
+}
+
+void MainWindow::onScaleClicked(){
+
+    ScaleDialog dlg(this, currentScale);
+
+    if (dlg.exec() == QDialog::Accepted) {
+        currentScale = dlg.getScale();
+        resize(640*currentScale, 480*currentScale);
+        center();
+    }
+
 }
 
 void MainWindow::onInfoClicked(){
@@ -184,6 +212,7 @@ void MainWindow::autoLoad(std::string filename, bool debug){
         onStepByStepToggled(true);
         stepByStepCheckboxAction->setChecked(true);
         pauseAction->setIcon(QIcon(":/icons/play.png"));
+
         memWin->show();
         memWin->raise();
         memWin->activateWindow();

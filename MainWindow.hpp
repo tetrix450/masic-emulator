@@ -29,6 +29,7 @@ private:
     void onShowMemory();
     void onReset();
     void onInfoClicked();
+    void onScaleClicked();
 
     bool loaded = false;
     CPUThread* cpu;
@@ -43,6 +44,7 @@ private:
     QWidget *openglWidget = nullptr;
     QTextEdit *memoryWidget = nullptr;
     MemoryWindow* memWin = nullptr;
+    float currentScale = 1.0;
 
     std::string loadedProgramFilename;
 };
