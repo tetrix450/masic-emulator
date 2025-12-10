@@ -148,13 +148,17 @@ uint8_t CPUThread::get_bus_ac(){
 
     switch(seleccion){
     default:
-    case ADD_OE:
+    case ADD_OE:{
+        uint16_t suma;
         if(!sig_mux_add){
-            return AC + get_bus_dat() + get_bus_ci();
+            suma = (uint16_t)AC + (uint16_t)get_bus_dat() + (uint16_t)get_bus_ci();
         }else{
-            return AC + ~get_bus_dat() + get_bus_ci();
+            suma = (uint16_t)AC + ~((uint16_t)get_bus_dat()) + (uint16_t)get_bus_ci();
         }
+
+        return suma&0xFF;
         break;
+    }
     case SHR_OE:
         return (AC>>1) + get_bus_ci();
         break;
@@ -186,9 +190,16 @@ uint8_t CPUThread::get_bus_c(){
         break;
     default:
     case 2:
-        suma = (uint16_t)AC + (uint16_t)get_bus_dat() + (uint16_t)get_bus_ci();
-        return (suma>>8)&1;
-        break;
+        uint16_t suma;
+        if(!sig_mux_add){
+            suma = (uint16_t)AC + (uint16_t)get_bus_dat() + (uint16_t)get_bus_ci();
+            return suma>0xFF;
+        }else{
+            suma = (uint16_t)AC + ~((uint16_t)get_bus_dat()) + (uint16_t)get_bus_ci();
+            return suma<=0xFF;
+        }
+
+    break;
     }
 }
 
