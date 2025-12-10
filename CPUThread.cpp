@@ -321,6 +321,13 @@ void CPUThread::step(){
         next_DH = 0;
     }
 
+    if(sig_f_d_up){
+        uint16_t next_D = ((uint16_t)(DH)<<8) | DL;
+        next_D++;
+        next_DL = next_D&0xFF;
+        next_DH = (next_D>>8)&0xFF;
+    }
+
     if(sig_f_dh){
         next_DH = get_bus_dat();
     }
@@ -373,12 +380,7 @@ void CPUThread::step(){
         next_SPH = (next_SP>>8)&0xFF;
     }
 
-    if(sig_f_d_up){
-        uint16_t next_D = ((uint16_t)(DH)<<8) | DL;
-        next_D++;
-        next_DL = next_D&0xFF;
-        next_DH = (next_D>>8)&0xFF;
-    }
+
 
     if(sig_f_pc_up){
         uint16_t next_PC = ((uint16_t)(PCH)<<8) | PCL;

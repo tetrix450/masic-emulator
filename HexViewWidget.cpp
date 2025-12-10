@@ -94,7 +94,7 @@ void HexViewWidget::paintEvent(QPaintEvent*){
                                                                          : QColor(192, 192, 255, 128);
                 p.fillRect(QRect(x, y, boxWidth, lineHeight), color);
             } else if (addr == highlightedByte){
-                p.fillRect(QRect(x, y, boxWidth, lineHeight), QColor(128, 255, 128));
+                p.fillRect(QRect(x, y, boxWidth, lineHeight), QColor(192, 0, 0));
             }
 
             p.drawText(x, y + fm.ascent(), QString("%1 ").arg(mem[addr], 2, 16, QChar('0')));
