@@ -182,6 +182,7 @@ void MainWindow::onInstructionStepClicked(){
 
 void MainWindow::onReset(){
     if(loaded){
+        cpu->clearMemory();
         autoLoad(loadedProgramFilename, true);
         sBar->showMessage("CPU reseteada y programa recargado. CPU en pausa.");
         memWin->updateView();

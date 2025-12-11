@@ -160,7 +160,7 @@ uint8_t CPUThread::get_bus_ac(){
         break;
     }
     case SHR_OE:
-        return (AC>>1) + get_bus_ci();
+        return (AC>>1) + (get_bus_ci()<<7);
         break;
     case AND_OE:
         return AC & get_bus_dat();
@@ -174,6 +174,13 @@ uint8_t CPUThread::get_bus_ac(){
     case BUS_AC:
         return get_bus_dat();
         break;
+    }
+}
+
+void CPUThread::clearMemory(){
+    for(int i = 0; i < 65536; i++){
+        mem[i] = 0;
+        io[i] = 0;
     }
 }
 
@@ -208,7 +215,7 @@ uint8_t CPUThread::get_bus_zos(){
 
     if(sig_mux_zos){
         // Entrada desde la ALU
-        uint8_t temp_z, temp_o, temp_s;
+        uint8_t temp_z, temp_v, temp_s;
 
         // Z
         temp_z = get_bus_ac() == 0;
@@ -219,9 +226,9 @@ uint8_t CPUThread::get_bus_zos(){
         // V
         uint8_t ac_7 = (AC>>7)&1;
         uint8_t dat_7 = (temp_dat>>7)&1;
-        temp_o = ((!temp_s) & ac_7 & dat_7) | (temp_s & (!ac_7) & (!dat_7));
+        temp_v = (ac_7 & dat_7 & !temp_s) | (!ac_7 & !dat_7 & temp_s);
 
-        return (temp_z<<2) | (temp_o<<1) | temp_s;
+        return (temp_z<<2) | (temp_v<<1) | temp_s;
     }else{
         // Entrada desde el bus de datos interno
         return (temp_dat>>1)&3;

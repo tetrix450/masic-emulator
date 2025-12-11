@@ -44,6 +44,7 @@ public:
     void step();
     void stepInstruction();
     void pause();
+    void clearMemory();
 
     // Getters
     uint16_t getPC(){return ((PCH<<8)|PCL);};
