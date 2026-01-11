@@ -20,6 +20,7 @@
 #include <QString>
 #include <QInputDialog>
 #include <string>
+#include <QProcess>
 
 extern uint8_t mem[65536];
 extern uint8_t io[65536];
@@ -68,8 +69,10 @@ void MainWindow::autoResize(){
 
 void MainWindow::setupToolbar() {
     QMenu* menuFile = menuBar()->addMenu("&Archivo");
-    QAction* loadFileAction = menuFile->addAction("&Cargar binario...");
-    connect(loadFileAction, &QAction::triggered, this, &MainWindow::onLoadFileClicked);
+    QAction* loadFileSourceAction = menuFile->addAction("&Cargar código fuente...");
+    connect(loadFileSourceAction, &QAction::triggered, this, &MainWindow::onLoadFileSourceClicked);
+    QAction* loadFileBinaryAction = menuFile->addAction("&Cargar binario...");
+    connect(loadFileBinaryAction, &QAction::triggered, this, &MainWindow::onLoadFileBinaryClicked);
 
     QMenu* menuSettings = menuBar()->addMenu("&Configuración");
     QAction* periodAction = menuSettings->addAction("&Periodo de reloj...");
@@ -143,7 +146,6 @@ void MainWindow::center(){
 
 void MainWindow::errorMessage(std::string message){
     QMessageBox::critical(this, "Error", message.c_str());
-    std::exit(1);
 }
 
 void MainWindow::warningMessage(std::string message){
@@ -223,9 +225,43 @@ void MainWindow::autoLoad(std::string filename, bool debug){
     for(int i = 0; i < 8192; i++){
         io[i] = 0x20;
     }
+
+    sBar->showMessage("Programa cargado correctamente.", 5000);
 }
 
-void MainWindow::onLoadFileClicked() {
+void MainWindow::assembleAndLoad(QString filename){
+    QProcess process;
+
+    process.start("emasic", {filename});
+    process.waitForFinished();
+
+    //QString stdoutText = process.readAllStandardOutput();
+    QString stderrText = process.readAllStandardError();
+    int exitCode = process.exitCode();
+
+    if(exitCode != 0){
+        errorMessage(stderrText.toStdString());
+        sBar->showMessage("El código fuente contiene errores", 5000);
+    }else{
+        autoLoad("out.mmc",false);
+    }
+}
+
+void MainWindow::onLoadFileSourceClicked(){
+
+    QFileDialog dlg(this);
+    dlg.setFileMode(QFileDialog::ExistingFile);
+    dlg.setDirectory("./");
+    dlg.setOption(QFileDialog::DontUseNativeDialog);
+
+    if(dlg.exec()){
+        QString filename = dlg.selectedFiles().first();
+
+        assembleAndLoad(filename);
+    }
+}
+
+void MainWindow::onLoadFileBinaryClicked() {
     QFileDialog dlg(this);
     dlg.setFileMode(QFileDialog::ExistingFile);
     dlg.setNameFilter("Masic Machine Code (*.mmc)");

@@ -53,7 +53,11 @@ int main(int argc, char *argv[]){
 
         if (!args.isEmpty()){
             QString filename = args.first();
-            w->autoLoad(filename.toStdString(), debugMode);
+            if(filename.endsWith(".mmc")){
+                w->autoLoad(filename.toStdString(), debugMode);
+            }else{
+                w->assembleAndLoad(filename);
+            }
         }
     }
 

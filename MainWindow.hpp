@@ -15,13 +15,15 @@ public:
     void errorMessage(std::string message);
     void warningMessage(std::string message);
     void autoLoad(std::string filename, bool debug);
+    void assembleAndLoad(QString filename);
 
 private:
     void setupToolbar();
     void setupDebugToolbar();
     void onStepByStepToggled(bool checked);
     void onPauseClicked();
-    void onLoadFileClicked();
+    void onLoadFileBinaryClicked();
+    void onLoadFileSourceClicked();
     void onClockStepClicked();
     void onPeriodClicked();
     void onInstructionStepClicked();
