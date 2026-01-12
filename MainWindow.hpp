@@ -32,6 +32,7 @@ private:
     void onReset();
     void onInfoClicked();
     void onScaleClicked();
+    void openManual();
 
     bool loaded = false;
     CPUThread* cpu;

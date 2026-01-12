@@ -21,14 +21,18 @@
 #include <QInputDialog>
 #include <string>
 #include <QProcess>
+#include <QFile>
+#include <QTemporaryFile>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QDebug>
 
 extern uint8_t mem[65536];
 extern uint8_t io[65536];
 
 MainWindow::MainWindow(CPUThread* cpu):cpu(cpu) {
     // Poner título a la ventana principal
-    this->setWindowTitle("EMUMASIC");
-
+    this->setWindowTitle("QTMASIC");
     // Escalar y centrar
     currentScale = 1.5;
     resize(640*currentScale, 480*currentScale);
@@ -71,7 +75,7 @@ void MainWindow::setupToolbar() {
     QMenu* menuFile = menuBar()->addMenu("&Archivo");
     QAction* loadFileSourceAction = menuFile->addAction("&Cargar código fuente...");
     connect(loadFileSourceAction, &QAction::triggered, this, &MainWindow::onLoadFileSourceClicked);
-    QAction* loadFileBinaryAction = menuFile->addAction("&Cargar binario...");
+    QAction* loadFileBinaryAction = menuFile->addAction("&Cargar código máquina...");
     connect(loadFileBinaryAction, &QAction::triggered, this, &MainWindow::onLoadFileBinaryClicked);
 
     QMenu* menuSettings = menuBar()->addMenu("&Configuración");
@@ -96,6 +100,29 @@ void MainWindow::setupToolbar() {
     QMenu* menuHelp = menuBar()->addMenu("&Ayuda");
     QAction* infoAction = menuHelp->addAction("&Información...");
     connect(infoAction, &QAction::triggered, this, &MainWindow::onInfoClicked);
+    QAction* guideAction = menuHelp->addAction("&Guía de programación...");
+    connect(guideAction, &QAction::triggered, this, &MainWindow::openManual);
+}
+
+void MainWindow::openManual(){
+    QFile resourceFile(":/guia_emasic.pdf");
+    if (!resourceFile.open(QIODevice::ReadOnly)) {
+        warningMessage("No se pudo abrir la guía");
+        return;
+    }
+
+    QTemporaryFile tempFile(QDir::tempPath() + "/guia_emasic.pdf");
+    tempFile.setAutoRemove(false);
+    if (!tempFile.open()) {
+        warningMessage("No se pudo crear el archivo temporal");
+        return;
+    }
+
+    tempFile.write(resourceFile.readAll());
+    tempFile.close();
+    resourceFile.close();
+
+    QDesktopServices::openUrl(QUrl::fromLocalFile(tempFile.fileName()));
 }
 
 void MainWindow::onScaleClicked(){
@@ -111,7 +138,7 @@ void MainWindow::onScaleClicked(){
 }
 
 void MainWindow::onInfoClicked(){
-    QMessageBox::information(this, "Info", "Emulador MASIC, hecho por Diego Cerezo Rojas. https://github.com/tetrix450/");
+    QMessageBox::information(this, "Acerca de...", "Emulador del sistema MASIC (v1.0), hecho por Diego Cerezo Rojas.");
 }
 
 void MainWindow::onShowMemory() {
