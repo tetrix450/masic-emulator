@@ -259,6 +259,16 @@ void MainWindow::autoLoad(std::string filename, bool debug){
 void MainWindow::assembleAndLoad(QString filename){
     QProcess process;
 
+    // Check if emasic is missing
+    connect(&process, &QProcess::errorOccurred, this,
+    [](QProcess::ProcessError error){
+        if (error == QProcess::FailedToStart) {
+            QMessageBox::critical(nullptr,"Error al cargar el ensamblador",
+              "EMASIC no pudo encontrarse. "
+              "Asegúrese de que qtmasic y emasic estén en la misma carpeta o en el PATH.");
+        }
+    });
+
     process.start("emasic", {filename});
     process.waitForFinished();
 
