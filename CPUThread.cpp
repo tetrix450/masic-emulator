@@ -247,8 +247,7 @@ void CPUThread::write_mem(){
 
 void CPUThread::step(){
     // Primero se consigue la palabra de control
-    controlReg = (uint16_t)0 | RCF | (C<<4) | (S<<5) | (V<<6) | (Z<<7) | (H<<8) | (BRQ<<9) | (IRQ<<10) | (IFETCH<<11);
-    uint64_t controlInput = (uint64_t)0 | (controlReg<<6) | RI;
+    uint64_t controlInput = (uint64_t)0 | RCF | (RI<<4) | (C<<10) | (S<<11) | (V<<12) | (Z<<13) | (H<<14) | (BRQ<<15) | (IRQ<<16) | (IFETCH<<17);
     uint64_t controlWord = firmware[controlInput];
 
     // Negar las señales activas a nivel bajo
