@@ -5,7 +5,7 @@
 #include <string>
 #include <thread>
 #include <QFile>
-#define ACTIVE_LOW_MASK ((uint64_t)0x0000002EFF000E7F)
+#define ACTIVE_LOW_MASK ((uint64_t)0b0010111011111110000000000000111000101111)
 
 // Variables externas
 extern void errorMessage(std::string message);
@@ -434,21 +434,18 @@ void CPUThread::reset(){
 }
 
 void CPUThread::run() {
+    using clock = std::chrono::steady_clock;
     using namespace std::chrono;
 
     running = true;
+    auto next = clock::now();
+
     while (running) {
-        auto start = high_resolution_clock::now();
+        next += nanoseconds((long)periodNs);
 
         step();
 
-        auto end = high_resolution_clock::now();
-        auto elapsed = duration_cast<nanoseconds>(end - start).count();
-        long remaining = periodNs - elapsed;
-
-        if (remaining > 0) {
-            std::this_thread::sleep_for(nanoseconds(remaining));
-        }
+        std::this_thread::sleep_until(next);
     }
 }
 
