@@ -1,5 +1,7 @@
 #include "PeriodDialog.hpp"
 
+#include <qsettings.h>
+
 PeriodDialog::PeriodDialog(QWidget* parent, double currentPeriodNs)
     : QDialog(parent)
 {
@@ -16,6 +18,11 @@ PeriodDialog::PeriodDialog(QWidget* parent, double currentPeriodNs)
     // Combo de unidades
     combo = new QComboBox(this);
     combo->addItems({"ns", "us", "ms", "s"});
+
+    // Seleccionar la unidad que se haya usado por última vez
+    QSettings settings;
+    QString lastPeriodUnit = settings.value("lastPeriodUnit", "ns").toString();
+    combo->setCurrentIndex(combo->findText(lastPeriodUnit));
 
     // Layout horizontal
     auto hbox = new QHBoxLayout;
