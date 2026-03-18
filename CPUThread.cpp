@@ -5,6 +5,7 @@
 #include <string>
 #include <thread>
 #include <QFile>
+#include <QSettings>
 #define ACTIVE_LOW_MASK ((uint64_t)0b0010111011111110000000000000111000101111)
 
 // Variables externas
@@ -48,7 +49,8 @@ CPUThread::CPUThread(){
     }
 
     // Inicializar periodo del ciclo de reloj
-    periodNs = 1000;
+    QSettings settings;
+    periodNs = settings.value("lastPeriodNs", 1000).toDouble(); // Leer el periodo de settings, si no, se usa 1000
 }
 
 uint16_t CPUThread::get_bus_dir(){
@@ -451,6 +453,10 @@ void CPUThread::run() {
 
 void CPUThread::setPeriodNs(double periodNs){
     this->periodNs = periodNs;
+
+    // Guardar el nuevo periodo en settings
+    QSettings settings;
+    settings.setValue("lastPeriodNs", periodNs);
 }
 
 double CPUThread::getPeriodNs(){

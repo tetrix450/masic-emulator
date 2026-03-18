@@ -26,6 +26,8 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QDebug>
+#include <QSettings>
+#include <QString>
 
 extern uint8_t mem[65536];
 extern uint8_t io[65536];
@@ -285,24 +287,36 @@ void MainWindow::assembleAndLoad(QString filename){
 }
 
 void MainWindow::onLoadFileSourceClicked(){
+    // Conseguir la última ruta a la que se accedió
+    QSettings settings;
+    QString lastDir = settings.value("lastDir", "./").toString(); // Leer última ruta ó usar ./ si no existe
 
+    // Abrir el diálogo de selección de archivo
     QFileDialog dlg(this);
     dlg.setFileMode(QFileDialog::ExistingFile);
-    dlg.setDirectory("./");
+    dlg.setDirectory(lastDir);
     dlg.setOption(QFileDialog::DontUseNativeDialog);
 
     if(dlg.exec()){
         QString filename = dlg.selectedFiles().first();
+
+        // Guardar la carpeta del archivo seleccionado
+        QFileInfo info(filename);
+        settings.setValue("lastDir", info.absolutePath());
 
         assembleAndLoad(filename);
     }
 }
 
 void MainWindow::onLoadFileBinaryClicked() {
+    // Conseguir la última ruta a la que se accedió
+    QSettings settings;
+    QString lastDir = settings.value("lastDir", "./").toString(); // Leer última ruta ó usar ./ si no existe
+
+    // Abrir el diálogo de selección de archivo
     QFileDialog dlg(this);
     dlg.setFileMode(QFileDialog::ExistingFile);
-    dlg.setNameFilter("Masic Machine Code (*.mmc)");
-    dlg.setDirectory("./");
+    dlg.setDirectory(lastDir);
     dlg.setOption(QFileDialog::DontUseNativeDialog);
 
     if(dlg.exec()){

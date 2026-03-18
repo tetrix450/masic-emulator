@@ -14,6 +14,10 @@ void errorMessage(std::string message){
 
 int main(int argc, char *argv[]){
     QApplication a(argc, argv);
+
+    a.setOrganizationName("TETRIX");
+    a.setApplicationName("QTMASIC");
+
     QApplication::setStyle("Fusion");
 
 
