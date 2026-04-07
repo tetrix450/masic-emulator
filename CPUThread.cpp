@@ -431,7 +431,7 @@ void CPUThread::step(){
 
 void CPUThread::reset(){
     BRQ = 0; IRQ = 0; IFETCH = 0;
-    DL = 0xA0; DH = 0xA5; PCL = 0; PCH = 0; SPL = 0x16; SPH = 0x3A; RCF = 0; RI = 0; AC = 0x5F; AUX = 0x9D;
+    DL = 0xA0; DH = 0xA5; PCL = 0; PCH = 0; SPL = 0x00; SPH = 0x00; RCF = 0; RI = 0; AC = 0x5F; AUX = 0x9D;
     H = 0; Z = 0; V = 0; S = 0; C = 0;
 }
 
