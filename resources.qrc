@@ -7,11 +7,11 @@
         <file>icons/play.png</file>
         <file>icons/pause.png</file>
         <file>icons/reset.png</file>
+        <file>guia_emasic.pdf</file>
         <file>firmware/firmware_0.bin</file>
         <file>firmware/firmware_1.bin</file>
         <file>firmware/firmware_2.bin</file>
         <file>firmware/firmware_3.bin</file>
         <file>firmware/firmware_4.bin</file>
-        <file>guia_emasic.pdf</file>
     </qresource>
 </RCC>
