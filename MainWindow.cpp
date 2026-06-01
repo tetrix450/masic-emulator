@@ -255,7 +255,8 @@ void MainWindow::autoLoad(std::string filename, bool debug){
         io[i] = 0x20;
     }
 
-    sBar->showMessage("Programa cargado correctamente.", 5000);
+    QString message = "Programa cargado correctamente (" + QString::number(file.size()) + " bytes)";
+    sBar->showMessage(message, 5000);
 }
 
 void MainWindow::assembleAndLoad(QString filename){
