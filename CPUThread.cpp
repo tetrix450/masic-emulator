@@ -51,6 +51,9 @@ CPUThread::CPUThread(){
     // Inicializar periodo del ciclo de reloj
     QSettings settings;
     periodNs = settings.value("lastPeriodNs", 1000).toDouble(); // Leer el periodo de settings, si no, se usa 1000
+
+    // Inicializar RAM con valores aleatorios
+    randomRAM();
 }
 
 uint16_t CPUThread::get_bus_dir(){
@@ -179,13 +182,6 @@ uint8_t CPUThread::get_bus_ac(){
     }
 }
 
-void CPUThread::clearMemory(){
-    for(int i = 0; i < 65536; i++){
-        mem[i] = 0;
-        io[i] = 0;
-    }
-}
-
 uint8_t CPUThread::get_bus_c(){
     int seleccion = (sig_mux_c_1<<1) | sig_mux_c_0;
     uint16_t suma;
@@ -241,7 +237,10 @@ void CPUThread::write_mem(){
     uint16_t direccion = get_bus_dir();
 
     if(!sig_mem_io){ // Seleccionado espacio de memoria principal
-        mem[direccion] = get_bus_mem_dat();
+        // Los primeros 8 KiB son de sólo lectura
+        if(direccion>=8192){
+            mem[direccion] = get_bus_mem_dat();
+        }
     }else{ // Seleccionado espacio de E/S
         io[direccion] = get_bus_mem_dat();
     }
@@ -249,14 +248,14 @@ void CPUThread::write_mem(){
 
 void CPUThread::step(){
     // Primero se consigue la palabra de control
-    uint64_t controlInput = (uint64_t)0 | RCF | (RI<<4) | (C<<10) | (S<<11) | (V<<12) | (Z<<13) | (H<<14) | (BRQ<<15) | (IRQ<<16) | (IFETCH<<17);
+    uint64_t controlInput = (uint64_t)0 | RCF | (RI<<4) | (C<<10) | (S<<11) | (V<<12) | (Z<<13) | (H<<14) | (BRQ<<15) | (IRQ<<16) | (IENT<<17);
     uint64_t controlWord = firmware[controlInput];
 
     // Negar las señales activas a nivel bajo
     controlWord ^= ACTIVE_LOW_MASK;
 
     // Extraer cada una de las señales de control
-    sig_ifetch = (controlWord>>39)&1;
+    sig_ient = (controlWord>>39)&1;
     sig_rcf_clr = (controlWord>>38)&1;
     sig_pc_oe = (controlWord>>37)&1;
     sig_mem_io = (controlWord>>36)&1;
@@ -284,7 +283,7 @@ void CPUThread::step(){
     sig_mux_ci_2 = (controlWord>>14)&1;
     sig_mux_ci_1 = (controlWord>>13)&1;
     sig_mux_ci_0 = (controlWord>>12)&1;
-    sig_f_i = (controlWord>>11)&1;
+    sig_f_h = (controlWord>>11)&1;
     sig_f_zos = (controlWord>>10)&1;
     sig_f_c = (controlWord>>9)&1;
     sig_iack = (controlWord>>8)&1;
@@ -298,7 +297,7 @@ void CPUThread::step(){
     sig_f_sp_down = (controlWord>>0)&1;
 
     // ############### Para asignar todas las señales a la vez al final del ciclo ###############################
-    uint8_t next_BRQ = BRQ, next_IRQ = IRQ, next_IFETCH = IFETCH;
+    uint8_t next_BRQ = BRQ, next_IRQ = IRQ, next_ient = IENT;
 
     // Registros
     uint8_t next_DL = DL, next_DH = DH, next_PCL = PCL, next_PCH = PCH;
@@ -344,7 +343,7 @@ void CPUThread::step(){
         next_DL = get_bus_dat();
     }
 
-    if(sig_f_i){
+    if(sig_f_h){
         next_H = (get_bus_dat()>>4)&1;
     }
 
@@ -370,10 +369,10 @@ void CPUThread::step(){
         write_mem();
     }
 
-    if(sig_ifetch){
-        next_IFETCH = 1;
+    if(sig_ient){
+        next_ient = 1;
     }else{
-        next_IFETCH = 0;
+        next_ient = 0;
     }
 
     if(sig_f_sp_down){
@@ -404,10 +403,10 @@ void CPUThread::step(){
     }
 
     // ################### Actualizar los registros al final #####################
-    // Señales de control de BRQ, IRQ e IFETCH
+    // Señales de control de BRQ, IRQ e IENT
     BRQ = next_BRQ;
     IRQ = next_IRQ;
-    IFETCH = next_IFETCH;
+    IENT = next_ient;
 
     // Biestables
     H = next_H;
@@ -429,10 +428,17 @@ void CPUThread::step(){
     AUX = next_AUX;
 }
 
+void CPUThread::randomRAM(){
+    for(int i = 0; i < 65536; i++){
+        mem[i] = random()%256;
+        io[i] = random()%256;
+    }
+}
+
 void CPUThread::reset(){
-    BRQ = 0; IRQ = 0; IFETCH = 0;
-    DL = 0xA0; DH = 0xA5; PCL = 0; PCH = 0; SPL = 0x00; SPH = 0x00; RCF = 0; RI = 0; AC = 0x5F; AUX = 0x9D;
-    H = 0; Z = 0; V = 0; S = 0; C = 0;
+    // Inicializar registros
+    BRQ = 0; IRQ = 0; IENT = 0; H = 0; Z = 0; V = 0; S = 0; C = 0;
+    DL = random()%256; DH = random()%256; PCL = 0; PCH = 0; SPL = 0x00; SPH = 0x00; RCF = 0; RI = 0; AC = random()%256; AUX = random()%256;
 }
 
 void CPUThread::run() {

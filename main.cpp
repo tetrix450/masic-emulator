@@ -15,18 +15,15 @@ void errorMessage(std::string message){
 int main(int argc, char *argv[]){
     QApplication a(argc, argv);
 
-    a.setOrganizationName("TETRIX");
+    a.setOrganizationName("Diego Cerezo Rojas");
     a.setApplicationName("QTMASIC");
 
     QApplication::setStyle("Fusion");
 
+    // Inicializar semilla de números aleatorios
+    srand(time(nullptr));
 
     CPUThread* cpu = new CPUThread();
-
-    // Inicializar memoria de vídeo
-    for(int i = 0; i < 8192; i++){
-        io[i] = 0x20;
-    }
 
     w = new MainWindow(cpu);
 

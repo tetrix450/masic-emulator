@@ -212,8 +212,8 @@ void MainWindow::onInstructionStepClicked(){
 }
 
 void MainWindow::onReset(){
+    cpu->randomRAM();
     if(loaded){
-        cpu->clearMemory();
         autoLoad(loadedProgramFilename, true);
         sBar->showMessage("CPU reseteada y programa recargado. CPU en pausa.");
         memWin->updateView();
@@ -248,11 +248,6 @@ void MainWindow::autoLoad(std::string filename, bool debug){
         memWin->activateWindow();
     }else{
         cpu->start();
-    }
-
-    // Clear VRAM
-    for(int i = 0; i < 8192; i++){
-        io[i] = 0x20;
     }
 
     QString message = "Programa cargado correctamente (" + QString::number(file.size()) + " bytes)";
