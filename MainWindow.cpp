@@ -212,9 +212,9 @@ void MainWindow::onInstructionStepClicked(){
 }
 
 void MainWindow::onReset(){
-    cpu->randomRAM();
     if(loaded){
         autoLoad(loadedProgramFilename, true);
+        cpu->randomRAM();
         sBar->showMessage("CPU reseteada y programa recargado. CPU en pausa.");
         memWin->updateView();
     }else{
@@ -235,6 +235,7 @@ void MainWindow::autoLoad(std::string filename, bool debug){
     memcpy(mem, data.constData(), len);
 
     loaded = true;
+    cpu->randomRAM();
     cpu->reset();
 
     // Activate debug?
@@ -333,12 +334,8 @@ void MainWindow::onLoadFileBinaryClicked() {
             cpu->reset();
 
             if(!stepByStepCheckboxAction->isChecked()){
+                cpu->randomRAM();
                 cpu->start();
-            }
-
-            // Clear VRAM
-            for(int i = 0; i < 8192; i++){
-                io[i] = 0x20;
             }
 
             sBar->showMessage("Programa cargado correctamente.", 5000);

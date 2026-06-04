@@ -430,15 +430,17 @@ void CPUThread::step(){
 
 void CPUThread::randomRAM(){
     for(int i = 0; i < 65536; i++){
-        mem[i] = random()%256;
-        io[i] = random()%256;
+        if(i >= 8192){
+            mem[i] = rand()%256;
+        }
+        io[i] = rand()%256;
     }
 }
 
 void CPUThread::reset(){
     // Inicializar registros
     BRQ = 0; IRQ = 0; IENT = 0; H = 0; Z = 0; V = 0; S = 0; C = 0;
-    DL = random()%256; DH = random()%256; PCL = 0; PCH = 0; SPL = 0x00; SPH = 0x00; RCF = 0; RI = 0; AC = random()%256; AUX = random()%256;
+    DL = rand()%256; DH = rand()%256; PCL = 0; PCH = 0; SPL = 0x00; SPH = 0x00; RCF = 0; RI = 0; AC = rand()%256; AUX = rand()%256;
 }
 
 void CPUThread::run() {

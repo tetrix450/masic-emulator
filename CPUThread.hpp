@@ -15,7 +15,7 @@ private:
 
     // Señales, registros, biestables
     uint8_t BRQ = 0, IRQ = 0, IENT = 0;
-    uint8_t DL = random()%256, DH = random()%256, PCL = 0, PCH = 0, SPL = 0, SPH = 0, RCF = 0, RI = 0, AC = random()%256, AUX = random()%256;
+    uint8_t DL = rand()%256, DH = rand()%256, PCL = 0, PCH = 0, SPL = 0, SPH = 0, RCF = 0, RI = 0, AC = rand()%256, AUX = rand()%256;
     uint16_t controlReg;
     uint8_t H = 0, Z = 0, V = 0, S = 0, C = 0;
 
