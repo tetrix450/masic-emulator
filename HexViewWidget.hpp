@@ -4,6 +4,7 @@
 #include <QAbstractScrollArea>
 #include "CPUThread.hpp"
 #include <QPoint>
+#include <QLineEdit>
 
 class HexViewWidget : public QAbstractScrollArea{
     Q_OBJECT
@@ -20,6 +21,7 @@ protected:
     void keyPressEvent(QKeyEvent* e) override;
     void mouseMoveEvent(QMouseEvent* e) override;
     void mouseReleaseEvent(QMouseEvent* e) override;
+    void resizeEvent(QResizeEvent* e) override;
 
 private:
     CPUThread* cpu;
@@ -27,6 +29,8 @@ private:
     int lineHeight;
     int byteWidth;
     int totalBytes;
+
+    QLineEdit* searchBar = nullptr;
 
     int firstRow;
     int totalRows;

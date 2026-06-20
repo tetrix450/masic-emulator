@@ -6,6 +6,8 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QColor>
+#include <QApplication>
+#include <QClipboard>
 
 extern uint8_t mem[65536];
 
@@ -16,6 +18,9 @@ HexViewWidget::HexViewWidget(QWidget* parent, CPUThread* cpu):
     editBuffer(),
     cpu(cpu)
 {
+    setFocusPolicy(Qt::StrongFocus);
+    viewport()->setFocusPolicy(Qt::StrongFocus);
+
     bytesPerRow = 16;
     QFont mono = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     viewport()->setFont(mono);
@@ -33,6 +38,51 @@ HexViewWidget::HexViewWidget(QWidget* parent, CPUThread* cpu):
                 firstRow = v;
                 viewport()->update();
             });
+
+    searchBar = new QLineEdit(this);
+    searchBar->setPlaceholderText("Go to address (hex)");
+    searchBar->setFixedHeight(22);
+    searchBar->move(0, 0);
+    searchBar->raise();
+
+    connect(searchBar, &QLineEdit::returnPressed, this, [this]() {
+        QString txt = searchBar->text().trimmed();
+
+        if (txt.startsWith("0x") || txt.startsWith("0X"))
+            txt = txt.mid(2);
+
+        bool ok = false;
+        int addr = txt.toInt(&ok, 16);
+        if (!ok) return;
+
+        addr = qBound(0, addr, totalBytes - 1);
+
+        int row = addr / bytesPerRow;
+
+        verticalScrollBar()->setValue(row);
+        firstRow = row;
+        viewport()->update();
+    });
+}
+
+void HexViewWidget::resizeEvent(QResizeEvent* e){
+    QAbstractScrollArea::resizeEvent(e);
+
+    if (searchBar){
+        int h = searchBar->sizeHint().height();
+
+        searchBar->setFixedWidth(viewport()->width());
+        searchBar->move(0, 0);
+
+        viewport()->setGeometry(
+            0,
+            h,
+            width(),
+            height() - h
+            );
+    }
+
+    updateScrollBar();
 }
 
 void HexViewWidget::updateScrollBar(){
@@ -133,6 +183,30 @@ void HexViewWidget::mouseReleaseEvent(QMouseEvent*){
 }
 
 void HexViewWidget::keyPressEvent(QKeyEvent* e){
+
+    if (e->modifiers() & Qt::ControlModifier &&
+        e->key() == Qt::Key_C){
+
+        if (selectionStart >= 0 && selectionEnd >= 0){
+
+            int selStart = qMin(selectionStart, selectionEnd);
+            int selEnd   = qMax(selectionStart, selectionEnd);
+
+            QString text;
+
+            for (int addr = selStart; addr <= selEnd; ++addr){
+                text += QString("%1").arg(mem[addr], 2, 16, QChar('0')).toUpper();
+
+                if (addr != selEnd)
+                    text += ' ';
+            }
+
+            QApplication::clipboard()->setText(text);
+        }
+
+        return;
+    }
+
     if (selectionStart < 0 || selectionEnd < 0)
         return;
 
