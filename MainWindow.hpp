@@ -33,6 +33,7 @@ private:
     void onInfoClicked();
     void onScaleClicked();
     void openManual();
+    void updateTitle();
 
     bool loaded = false;
     CPUThread* cpu;

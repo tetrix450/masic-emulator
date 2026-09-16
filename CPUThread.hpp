@@ -10,7 +10,8 @@ class CPUThread : public QThread {
 private:
     bool running = false;
     void run() override;
-    double periodNs; // Periodo de reloj, por defecto 1MHz (1us)
+    double periodNs; // Periodo target de reloj, por defecto 4MHz (250ns)
+    double periodElapsedNs; // Tiempo que ha transcurrido en un ciclo de reloj real (en ns)
     uint64_t firmware[FIRM_SIZE]; // Aquí se almacenarán todas las palabras de control del firmware
 
     // Señales, registros, biestables
@@ -74,6 +75,7 @@ public:
 
     void setPeriodNs(double periodNs);
     double getPeriodNs();
+    double getPeriodElapsedNs();
     bool isRunning(){return running;};
 };
 

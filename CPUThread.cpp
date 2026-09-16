@@ -50,7 +50,7 @@ CPUThread::CPUThread(){
 
     // Inicializar periodo del ciclo de reloj
     QSettings settings;
-    periodNs = settings.value("lastPeriodNs", 1000).toDouble(); // Leer el periodo de settings, si no, se usa 1000
+    periodNs = settings.value("lastPeriodNs", 250).toDouble(); // Leer el periodo de settings, si no, se usa 250
 
     // Inicializar RAM con valores aleatorios
     randomRAM();
@@ -443,20 +443,50 @@ void CPUThread::reset(){
     DL = rand()%256; DH = rand()%256; PCL = 0; PCH = 0; SPL = 0x00; SPH = 0x00; RCF = 0; RI = 0; AC = rand()%256; AUX = rand()%256;
 }
 
-void CPUThread::run() {
+void CPUThread::run(){
     using clock = std::chrono::steady_clock;
-    using namespace std::chrono;
 
     running = true;
     auto next = clock::now();
 
+    // Para la media del periodo de reloj cada segundo
+    double accumulatedStepNs = 0.0;
+    uint64_t stepCount = 0;
+
+    auto lastUpdate = clock::now();
+
+    // Bucle de ejecución de la CPU
     while (running) {
-        next += nanoseconds((long)periodNs);
+        next += std::chrono::nanoseconds(static_cast<long long>(periodNs));
 
+        // Medir el tiempo que ha tardado en ejecutarse el ciclo de reloj
+        auto stepStart = clock::now();
         step();
+        auto stepEnd = clock::now();
 
+        // Acumular las medidas para luego hacer la media
+        accumulatedStepNs += std::chrono::duration<double, std::nano>(stepEnd - stepStart).count();
+        stepCount++;
+
+        // Actualizar la carga cada segundo
+        if (stepEnd - lastUpdate >= std::chrono::seconds(1)) {
+
+            double averageStepNs = accumulatedStepNs / stepCount;
+
+            periodElapsedNs = averageStepNs;
+
+            accumulatedStepNs = 0.0;
+            stepCount = 0;
+            lastUpdate = stepEnd;
+        }
+
+        // Si sobra tiempo, dormir hasta el siguiente periodo
         std::this_thread::sleep_until(next);
     }
+}
+
+double CPUThread::getPeriodElapsedNs(){
+    return periodElapsedNs;
 }
 
 void CPUThread::setPeriodNs(double periodNs){

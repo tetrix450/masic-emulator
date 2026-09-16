@@ -53,6 +53,16 @@ MainWindow::MainWindow(CPUThread* cpu):cpu(cpu) {
     memWin = new MemoryWindow(this, cpu);
     memWin->updateView();
 
+
+    // Timer para actualizar la carga de la CPU en el título de la ventana
+    QTimer *timer = new QTimer(this);
+
+    connect(timer, &QTimer::timeout, this, &MainWindow::updateTitle);
+
+    timer->start(1000);
+    // -------------------------------------------------------------------
+
+
     // -------------- Apartar memWin a la derecha --------------
     // Obtener las dimensiones de la pantalla
     QScreen *screen = QApplication::primaryScreen();
@@ -65,6 +75,14 @@ MainWindow::MainWindow(CPUThread* cpu):cpu(cpu) {
     // Mover la ventana
     memWin->move(x + this->width(), y);
     // ---------------------------------------------------------
+}
+
+void MainWindow::updateTitle(){
+    double load = cpu->getPeriodElapsedNs() / cpu->getPeriodNs() * 100.0;
+
+    if (load > 100.0) load = 100.0;
+
+    setWindowTitle(QString("QTMASIC (%1%)").arg(load, 0, 'f', 1));
 }
 
 void MainWindow::autoResize(){
